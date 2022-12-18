@@ -40,4 +40,20 @@ public class User implements Serializable {
     @OneToMany
     @JoinColumn(name = "user_id")
     private List<UserJobInfo> userJobInfoList;
+
+    public static User fromDto(UserDto dto) {
+        User user = new User();
+        user.setId(dto.getId());
+        user.setFamilyName(dto.getFamilyName());
+        user.setMiddleName(dto.getMiddleName());
+        user.setFirstName(dto.getFirstName());
+        user.setBirthDay(dto.getBirthday());
+        user.setGender(dto.getGender().toString());
+        user.setAge(dto.getAge());
+        user.setDescription(dto.getDescription());
+        user.setUpdated(dto.getUpdated());
+        user.setCreated(dto.getCreated());
+        user.setIsBlocked(dto.getIsBlocked());
+        return user;
+    }
 }

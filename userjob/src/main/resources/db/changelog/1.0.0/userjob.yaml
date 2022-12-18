@@ -16,9 +16,6 @@ databaseChangeLog:
               - column:
                   name: family_name
                   type: varchar(50)
-                  constraints:
-                    unique: true
-                    nullable: false
               - column:
                   name: middle_name
                   type: varchar(50)
@@ -32,7 +29,7 @@ databaseChangeLog:
                   type: datetime
               - column:
                   name: gender
-                  type: varchar(1)
+                  type: varchar(6)
               - column:
                   name: age
                   type: int
@@ -60,7 +57,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: company_name
-                  type: varchar(5)
+                  type: varchar(50)
               - column:
                   name: description
                   type: varchar(50)
@@ -101,8 +98,8 @@ databaseChangeLog:
               - column:
                   name: is_activity
                   type: boolean
-                  #constraints:
-                    #nullable: false
+                  constraints:
+                    nullable: false
               - column:
                   name: created
                   type: timestamp

@@ -12,7 +12,10 @@ public class CompanyDto {
 
     public static CompanyDto fromEntity(Company company) {
         CompanyDto dto = new CompanyDto();
+        dto.setId(company.getId());
         dto.setCompanyName(company.getCompanyName());
+        dto.setDescription(company.getDescription());
+        dto.setIsActivity(company.getIsActivity());
         return dto;
     }
 }

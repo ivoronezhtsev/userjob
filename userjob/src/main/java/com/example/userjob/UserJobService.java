@@ -5,7 +5,6 @@ import com.example.userjob.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
@@ -13,9 +12,9 @@ import static com.example.userjob.dto.CompanyDto.fromEntity;
 
 @Service
 public class UserJobService {
-    private UserRepository userRepository;
-    private UserJobRepository userJobRepository;
-    private CompanyRepository companyRepository;
+    private final UserRepository userRepository;
+    private final UserJobRepository userJobRepository;
+    private final CompanyRepository companyRepository;
 
     public UserJobService(@Autowired UserRepository userRepository,
                           @Autowired UserJobRepository userJobRepository,
@@ -26,29 +25,32 @@ public class UserJobService {
     }
 
     public void create(UserDto userDto) {
-        // Валидация
-        if (userDto.getUserJobInfoDto() != null // todo Если getUserId == null ?
+        if (userDto.getUserJobInfoDto() != null
+                && userDto.getUserJobInfoDto().getUserId() != null
                 && userRepository.findById(userDto.getUserJobInfoDto().getUserId()).isPresent()
-                || userRepository.findById(userDto.getUserJobInfoDto().getIdCompany()).isPresent()) {
-            throw new AllreadyPresentException();
+                || (userDto.getUserJobInfoDto().getIdCompany() != null
+                && userRepository.findById(userDto.getUserJobInfoDto().getIdCompany()).isPresent())) {
+            throw new AlreadyPresentException();
         }
-        userRepository.save(fromDto(userDto));
-        userJobRepository.save(UserJobInfo.fromDto(userDto.getUserJobInfoDto()));
-        companyRepository.save(Company.fromDto(userDto.getCompanyDto()));
+        User user = userRepository.save(User.fromDto(userDto));
+        UserJobInfo userJobInfo = UserJobInfo.fromDto(userDto.getUserJobInfoDto());
+        userJobInfo.setUserId(user.getId());
+        Company company = companyRepository.save(Company.fromDto(userDto.getCompanyDto()));
+        userJobInfo.setCompany(company);
+        userJobRepository.save(userJobInfo);
     }
 
     public UserJobInfoRequestResponse get(UserJobInfoRequestResponse query) {
         UserJobInfoRequestResponse response = new UserJobInfoRequestResponse();
         if (query.getUserDto() != null && query.getUserDto().getId() != null) {
-            userRepository.findById(query.getUserDto().getId()).ifPresent(user ->
-                    userJobRepository.findById(user.getId()).ifPresent(userJobInfo -> { //todo У пользователя мб несколько работ и только одна действующая findById
-                        if (userJobInfo.getIsActivity()) {
-                            companyRepository.findById(userJobInfo.getIdCompany()).ifPresent(company -> {
-                                response.setUserDto(UserDto.fromEntity(user));
-                                response.setCompanyDto(fromEntity(company));
-                            });
-                        }
-                    }));
+            userRepository.findById(query.getUserDto().getId()).ifPresentOrElse(user -> {
+                user.getUserJobInfoList().stream().filter(UserJobInfo::getIsActivity).findFirst()
+                        .ifPresentOrElse(userJobInfo -> {
+                            response.setUserDto(UserDto.fromEntity(user));
+                            response.setCompanyDto(fromEntity(userJobInfo.getCompany()));
+                        }, NoSuchElementException::new);
+            }, NoSuchElementException::new);
+
         } else if (query.getCompanyDto() != null && query.getCompanyDto().getId() != null) {
             companyRepository.findById(query.getCompanyDto().getId()).ifPresent(company -> response.setCompanyDto(fromEntity(company)));
         }
@@ -62,37 +64,25 @@ public class UserJobService {
                 userJobInfoRequestResponse.getUserJobInfoDto(),
                 userJobInfoRequestResponse.getCompanyDto());
         userRepository.findById(userJobInfoRequestResponse.getUserDto().getId()).ifPresentOrElse(user -> {
-            if(!UserDto.fromEntity(user).equals(userJobInfoRequestResponse.getUserDto())) {
+            if (!UserDto.fromEntity(user).equals(userJobInfoRequestResponse.getUserDto())) {
                 user.setUpdated(LocalDateTime.now());
                 userRepository.save(user);
                 response.setUserDto(UserDto.fromEntity(user));
             }
-        }, NotFoundException::new);
+        }, NoSuchElementException::new);
         userJobRepository.findById(userJobInfoRequestResponse.getUserJobInfoDto().getId()).ifPresentOrElse(userJobInfo -> {
-            if(!UserJobInfoDto.fromEntity(userJobInfo).equals(userJobInfoRequestResponse.getUserJobInfoDto())) {
+            if (!UserJobInfoDto.fromEntity(userJobInfo).equals(userJobInfoRequestResponse.getUserJobInfoDto())) {
                 userJobInfo.setUpdated(LocalDateTime.now());
                 userJobRepository.save(userJobInfo);
                 response.setUserJobInfoDto(UserJobInfoDto.fromEntity(userJobInfo));
             }
-        }, NotFoundException::new);
+        }, NoSuchElementException::new);
         companyRepository.findById(userJobInfoRequestResponse.getCompanyDto().getId()).ifPresentOrElse(company -> {
             company.setUpdated(LocalDateTime.now());
             companyRepository.save(company);
             response.setCompanyDto(fromEntity(company));
-        }, NotFoundException::new);
+        }, NoSuchElementException::new);
         //todo Не уверен что нужны dto если и нужны то использовать DIP
         return response;
-    }
-
-
-
-
-    private static User fromDto(UserDto dto) {
-        User user = new User();
-        user.setId(dto.getUserJobInfoDto().getUserId());
-        user.setFamilyName(dto.getFamilyName());
-        user.setMiddleName(dto.getMiddleName());
-        user.setFirstName(dto.getFirstName());
-        return user;
     }
 }

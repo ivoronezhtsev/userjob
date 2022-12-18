@@ -8,12 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController("api/v1/")
 public class Controller {
 
     @Autowired
-    private UserJobService userJobService;
+    private final UserJobService userJobService;
 
     public Controller(UserJobService userJobService) {
         this.userJobService = userJobService;
@@ -23,14 +24,15 @@ public class Controller {
     ResponseEntity<Void> createUserJob(@RequestBody UserDto userDto) {
         try {
             userJobService.create(userDto);
-        } catch (AllreadyPresentException exception) {
+        } catch (AlreadyPresentException exception) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping("update-userjob")
-    ResponseEntity<UserJobInfoRequestResponse> updateUserJob(@RequestBody UserJobInfoRequestResponse updateRequest) {
+    ResponseEntity<UserJobInfoRequestResponse> updateUserJob(
+            @RequestBody UserJobInfoRequestResponse updateRequest) {
         try {
             return ResponseEntity.ok(userJobService.update(updateRequest));
         } catch (NoSuchElementException exception) {
@@ -39,14 +41,16 @@ public class Controller {
     }
 
     @GetMapping("get-userjob")
-    ResponseEntity<UserJobInfoRequestResponse> getUserJob(@RequestBody(required = false) UserJobInfoRequestResponse query) {
-        if (query == null) {
+    ResponseEntity<UserJobInfoRequestResponse> getUserJob(
+            Optional<UserJobInfoRequestResponse> query) {
+        if (query.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        UserJobInfoRequestResponse response = userJobService.get(query);
-        if (response.getUserDto() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            UserJobInfoRequestResponse response = userJobService.get(query.get());
+            return ResponseEntity.ok(response);
+        } catch (NoSuchElementException exception) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(response);
     }
 }
