@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-@RestController("api/v1/")
+@RestController
+@RequestMapping("api/v1")
 public class Controller {
 
     @Autowired

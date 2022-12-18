@@ -20,7 +20,7 @@ public class UserjobApplication {
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.example.userjob"))
                 .paths(PathSelectors.any())
                 .build();
     }
