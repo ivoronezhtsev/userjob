@@ -4,6 +4,7 @@ import com.example.userjob.service.UserJobService;
 import com.example.userjob.dto.UserDto;
 import com.example.userjob.dto.UserJobInfoRequestResponse;
 import com.example.userjob.exception.AlreadyPresentException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +15,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class Controller {
-
-    @Autowired
     private final UserJobService userJobService;
-
-    public Controller(UserJobService userJobService) {
-        this.userJobService = userJobService;
-    }
 
     @PostMapping("create-userjob")
     ResponseEntity<Void> createUserJob(@RequestBody UserDto userDto) {

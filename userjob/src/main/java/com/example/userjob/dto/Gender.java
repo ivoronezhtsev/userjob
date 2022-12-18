@@ -3,7 +3,7 @@ package com.example.userjob.dto;
 public enum Gender {
     MALE("MALE"),
     FEMALE("FEMALE");
-    private String code;
+    private final String code;
 
     Gender(String code) {
         this.code = code;
@@ -19,6 +19,6 @@ public enum Gender {
         } else if (code.equals("FEMALE")) {
             return FEMALE;
         }
-        throw new RuntimeException(); //todo Обработка ошибок
+        throw new IllegalArgumentException();
     }
 }

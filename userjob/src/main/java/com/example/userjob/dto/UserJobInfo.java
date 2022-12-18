@@ -1,6 +1,5 @@
-package com.example.userjob.repository;
+package com.example.userjob.dto;
 
-import com.example.userjob.dto.UserJobInfoDto;
 import com.example.userjob.entity.Company;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

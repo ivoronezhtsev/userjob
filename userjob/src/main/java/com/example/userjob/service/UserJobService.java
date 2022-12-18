@@ -6,6 +6,7 @@ import com.example.userjob.dto.*;
 import com.example.userjob.entity.Company;
 import com.example.userjob.entity.User;
 import com.example.userjob.entity.UserJobRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,18 +16,11 @@ import java.util.NoSuchElementException;
 import static com.example.userjob.dto.CompanyDto.fromEntity;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserJobService {
     private final UserRepository userRepository;
     private final UserJobRepository userJobRepository;
     private final CompanyRepository companyRepository;
-
-    public UserJobService(@Autowired UserRepository userRepository,
-                          @Autowired UserJobRepository userJobRepository,
-                          @Autowired CompanyRepository companyRepository) {
-        this.userRepository = userRepository;
-        this.userJobRepository = userJobRepository;
-        this.companyRepository = companyRepository;
-    }
 
     public void create(UserDto userDto) {
         if (userDto.getUserJobInfoDto() != null
@@ -58,7 +52,6 @@ public class UserJobService {
         } else if (query.getCompanyDto() != null && query.getCompanyDto().getId() != null) {
             companyRepository.findById(query.getCompanyDto().getId()).ifPresent(company -> response.setCompanyDto(fromEntity(company)));
         }
-        //todo Пользователь не найден
         return response;
     }
 
