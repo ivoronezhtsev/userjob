@@ -1,6 +1,6 @@
 package com.example.userjob.dto;
 
-import com.example.userjob.data.User;
+import com.example.userjob.entity.User;
 import lombok.Data;
 
 import java.time.LocalDate;

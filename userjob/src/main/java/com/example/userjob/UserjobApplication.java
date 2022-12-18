@@ -12,16 +12,16 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 public class UserjobApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(UserjobApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(UserjobApplication.class, args);
+    }
 
-	@Bean
-	public Docket api() {
-		return new Docket(DocumentationType.OAS_30)
-				.select()
-				.apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.any())
-				.build();
-	}
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.OAS_30)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build();
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.userjob.dto;
 
-import com.example.userjob.data.UserJobInfo;
+import com.example.userjob.repository.UserJobInfo;
 import lombok.Data;
 
 import java.time.LocalDateTime;

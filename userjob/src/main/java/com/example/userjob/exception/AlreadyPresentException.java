@@ -1,4 +1,4 @@
-package com.example.userjob;
+package com.example.userjob.exception;
 
 public class AlreadyPresentException extends RuntimeException {
 }

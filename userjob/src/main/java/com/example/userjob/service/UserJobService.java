@@ -1,7 +1,11 @@
-package com.example.userjob;
+package com.example.userjob.service;
 
-import com.example.userjob.data.*;
+import com.example.userjob.exception.AlreadyPresentException;
+import com.example.userjob.repository.*;
 import com.example.userjob.dto.*;
+import com.example.userjob.entity.Company;
+import com.example.userjob.entity.User;
+import com.example.userjob.entity.UserJobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +86,6 @@ public class UserJobService {
             companyRepository.save(company);
             response.setCompanyDto(fromEntity(company));
         }, NoSuchElementException::new);
-        //todo Не уверен что нужны dto если и нужны то использовать DIP
         return response;
     }
 }

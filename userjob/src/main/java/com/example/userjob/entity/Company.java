@@ -1,12 +1,12 @@
-package com.example.userjob.data;
+package com.example.userjob.entity;
 
+import com.example.userjob.repository.UserJobInfo;
 import com.example.userjob.dto.CompanyDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

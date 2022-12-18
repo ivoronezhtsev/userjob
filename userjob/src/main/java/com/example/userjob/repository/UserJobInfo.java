@@ -1,13 +1,12 @@
-package com.example.userjob.data;
+package com.example.userjob.repository;
 
 import com.example.userjob.dto.UserJobInfoDto;
-import lombok.Builder;
+import com.example.userjob.entity.Company;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,7 +30,7 @@ public class UserJobInfo {
     private LocalDateTime created;
     private LocalDateTime updated;
     @ManyToOne
-    @JoinColumn(name = "id_company", referencedColumnName="id")
+    @JoinColumn(name = "id_company", referencedColumnName = "id")
     private Company company;
 
     public static UserJobInfo fromDto(UserJobInfoDto dto) {

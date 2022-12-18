@@ -1,6 +1,6 @@
 package com.example.userjob.dto;
 
-import com.example.userjob.data.Company;
+import com.example.userjob.entity.Company;
 import lombok.Data;
 
 @Data

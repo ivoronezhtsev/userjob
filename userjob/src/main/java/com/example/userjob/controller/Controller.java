@@ -1,7 +1,9 @@
-package com.example.userjob;
+package com.example.userjob.controller;
 
+import com.example.userjob.service.UserJobService;
 import com.example.userjob.dto.UserDto;
 import com.example.userjob.dto.UserJobInfoRequestResponse;
+import com.example.userjob.exception.AlreadyPresentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +52,7 @@ public class Controller {
             UserJobInfoRequestResponse response = userJobService.get(query.get());
             return ResponseEntity.ok(response);
         } catch (NoSuchElementException exception) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
