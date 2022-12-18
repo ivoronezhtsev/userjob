@@ -1,5 +1,6 @@
 package com.example.userjob.data;
 
+import com.example.userjob.dto.UserDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -31,8 +33,8 @@ public class User implements Serializable {
     private String gender;
     private Integer age;
     private String description;
-    private LocalDate created;
-    private LocalDate updated;
+    private LocalDateTime created;
+    private LocalDateTime updated;
     @Column(name = "is_blocked")
     private Boolean isBlocked; //todo boolean
     @OneToMany

@@ -101,6 +101,8 @@ databaseChangeLog:
               - column:
                   name: is_activity
                   type: boolean
+                  #constraints:
+                    #nullable: false
               - column:
                   name: created
                   type: timestamp

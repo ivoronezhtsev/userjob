@@ -1,7 +1,8 @@
-package com.example.userjob;
+package com.example.userjob.data;
 
-import com.example.userjob.data.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
+
 }
